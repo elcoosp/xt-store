@@ -11,7 +11,7 @@ chrome = {
   runtime: {}
 }
 
-const storageAreaFailurefactory = () => ({
+const storageAreaFailureFactory = () => ({
   get: (keys, cb) =>
     delay(() => {
       chrome.runtime.lastError = RUNTIME_ERROR
@@ -39,9 +39,9 @@ const storageAreaFailurefactory = () => ({
     })
 })
 const storageAreaFailure = {
-  sync: storageAreaFailurefactory(),
-  local: storageAreaFailurefactory(),
-  managed: storageAreaFailurefactory(),
+  sync: storageAreaFailureFactory(),
+  local: storageAreaFailureFactory(),
+  managed: storageAreaFailureFactory(),
   onChanged: {
     addListener: cb =>
       delay(() => {

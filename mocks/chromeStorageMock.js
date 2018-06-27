@@ -9,7 +9,7 @@ chrome = {
   runtime: {}
 }
 
-const storageAreafactory = () => ({
+const storageAreaFactory = () => ({
   get: (keys, cb) => delay(cb, KEY_VALUE),
   set: (keys, cb) => delay(cb),
   getBytesInUse: (keys, cb) => delay(cb, BYTES_IN_USE),
@@ -18,9 +18,9 @@ const storageAreafactory = () => ({
 })
 
 const storageArea = {
-  sync: storageAreafactory(),
-  local: storageAreafactory(),
-  managed: storageAreafactory(),
+  sync: storageAreaFactory(),
+  local: storageAreaFactory(),
+  managed: storageAreaFactory(),
   onChanged: {
     addListener: cb => delay(cb, KEY_VALUE, ON_CHANGE_LISTENER_NAMESPACE)
   }
