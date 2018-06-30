@@ -2,8 +2,7 @@ const store = require('../src/storeFactory').default
 const {
   KEY_VALUE,
   ON_CHANGE_LISTENER_NAMESPACE,
-  BYTES_IN_USE,
-  RUNTIME_ERROR
+  BYTES_IN_USE
 } = require('../mocks/mockConstants')
 
 describe('Store success', () => {
@@ -41,10 +40,18 @@ describe('Store success', () => {
     expect(dS).toEqual(undefined)
     expect(dL).toEqual(undefined)
   })
+
   test('store.set', async () => {
     const dS = await store('sync').set({ data: 7 })
     const dL = await store('local').set({ data: 7 })
     expect(dS).toEqual({ data: 7 })
     expect(dL).toEqual({ data: 7 })
+  })
+
+  test('store.remove', async () => {
+    const dS = await store('sync').remove('data')
+    const dL = await store('local').remove(['data'])
+    expect(dS).toEqual(undefined)
+    expect(dL).toEqual(undefined)
   })
 })

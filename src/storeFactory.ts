@@ -46,11 +46,22 @@ const storeFactory = (type: StoreType) => {
             : resolve(items)
       )
     )
+  const remove = (keys: string | string[]): Promise<undefined> =>
+    new Promise((resolve, reject) =>
+      CHROME_STORE.remove(
+        keys,
+        () =>
+          chrome.runtime.lastError
+            ? reject(chrome.runtime.lastError)
+            : resolve(undefined)
+      )
+    )
   const self = {
     get,
     getBytesInUse,
     clear,
-    set
+    set,
+    remove
   }
   return self
 }

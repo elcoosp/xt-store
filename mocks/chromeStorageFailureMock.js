@@ -1,4 +1,4 @@
-const { delay } = require('../__tests__/utils')
+const { delay } = require('./utils')
 const { RUNTIME_ERROR } = require('./mockConstants')
 
 const setErrorAndCall = cb => {
@@ -24,5 +24,5 @@ const storageAreaFailure = {
 //Runtime global variable
 chrome = {
   runtime: {},
-  storageArea
+  storage: storageAreaFailure
 }
