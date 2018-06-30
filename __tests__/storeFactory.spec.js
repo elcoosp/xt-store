@@ -23,7 +23,7 @@ describe('Store success', () => {
     expect(dL).toEqual(KEY_VALUE)
   })
 
-  test('store.getBytesInUse', async () => {
+  test('store.getBytesInUse without arguments', async () => {
     const dS = await store('sync').getBytesInUse()
     const dL = await store('local').getBytesInUse()
     expect(dS).toEqual(BYTES_IN_USE)
