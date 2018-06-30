@@ -3,18 +3,15 @@ const {
   ON_CHANGE_LISTENER_NAMESPACE,
   BYTES_IN_USE
 } = require('./mockConstants')
-const { delay } = require('../__tests__/utils')
-//Runtime global variable
-chrome = {
-  runtime: {}
-}
+
+const { delay } = require('../mocks/utils')
 
 const storageAreaFactory = () => ({
   get: (keys, cb) => delay(cb, KEY_VALUE),
   set: (keys, cb) => delay(cb),
   getBytesInUse: (keys, cb) => delay(cb, BYTES_IN_USE),
   remove: (keys, cb) => delay(cb),
-  clear: cb => delay(cb)
+  clear: cb => delay(cb, undefined)
 })
 
 const storageArea = {
@@ -26,4 +23,8 @@ const storageArea = {
   }
 }
 
-module.exports = { storageArea }
+//Runtime global variable
+chrome = {
+  runtime: {},
+  storage: storageArea
+}
