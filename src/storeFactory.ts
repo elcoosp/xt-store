@@ -1,6 +1,8 @@
-type StoreType = 'sync' | 'local'
-const storeFactory = (type: StoreType) => {
-  const CHROME_STORE: chrome.storage.StorageArea = chrome.storage[type]
+type StoreType = 'sync' | 'local' | 'managed'
+const storeFactory = (storeType: StoreType) => {
+  const CHROME_STORE: chrome.storage.StorageArea = chrome.storage[storeType]
+  const ifStoreSync = (a: number | string, b?: number | string) =>
+    storeType === 'sync' ? a : b
 
   const get = (keys: string | string[] | Object | null): Promise<Object> =>
     new Promise((resolve, reject) =>
@@ -56,55 +58,32 @@ const storeFactory = (type: StoreType) => {
             : resolve(undefined)
       )
     )
+
+  const update = (updater: (prevData: Object) => Object) => (
+    keys: string | string[] | Object | null
+  ): Promise<Object> =>
+    new Promise((resolve, reject) =>
+      get(keys)
+        .then(prevData => set(updater(prevData)).then(resolve))
+        .catch(reject)
+    )
+
   const self = {
     get,
     getBytesInUse,
     clear,
+    update,
     set,
-    remove
+    remove,
+    onChange: chrome.storage.onChanged.addListener,
+    QUOTA_BYTES: ifStoreSync(102400, 5242880),
+    QUOTA_BYTES_PER_ITEM: ifStoreSync(8192),
+    MAX_WRITE_OPERATIONS_PER_HOUR: ifStoreSync(1800),
+    MAX_WRITE_OPERATIONS_PER_MINUTE: ifStoreSync(120),
+    MAX_SUSTAINED_WRITE_OPERATIONS_PER_MINUTE: ifStoreSync(1000000),
+    MAX_ITEMS: ifStoreSync(512)
   }
   return self
 }
 
 export default storeFactory
-
-// const db = {},
-//   S = chrome.storage.sync
-
-// db.set = o =>
-//   new Promise((resolve, reject) =>
-//     S.set(
-//       o,
-//       () =>
-//         chrome.runtime.lastError ? reject(chrome.runtime.lastError) : resolve(o)
-//     )
-//   )
-
-// db.get = key =>
-//   new Promise((resolve, reject) =>
-//     S.get(
-//       key,
-//       o =>
-//         chrome.runtime.lastError
-//           ? reject(chrome.runtime.lastError)
-//           : resolve(o[key])
-//     )
-//   )
-
-// db.update = (updater, predicate = _ => true) => key => data =>
-//   new Promise((resolve, reject) =>
-//     db
-//       .get(key)
-//       .then(
-//         prevData =>
-//           predicate(prevData)
-//             ? db.set({ [key]: updater(prevData, data) }).then(resolve)
-//             : resolve(prevData)
-//       )
-//       .catch(reject)
-//   )
-
-// const concat = (prevData, data) => (prevData ? prevData : []).concat(data)
-
-// db.push = db.update(concat)
-// db.pushIf = p => db.update(concat, p)
