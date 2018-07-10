@@ -2,7 +2,7 @@
   "name": "xt-store",
   "version": "1.0.0",
   "description": "Chrome extension storage promise utility",
-  "main": "index.js",
+  "main": "lib/storeFactory.js",
   "scripts": {
     "commit": "git-cz",
     "build": "tsc",
